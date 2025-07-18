@@ -1,6 +1,4 @@
-<<<<<<< HEAD
-# event-driven-pipeline
-=======
+
 # 📊 Event-Driven Data Pipeline on AWS
 
 This project showcases an **event-driven data processing pipeline** using AWS services. When a `.csv` file is uploaded to S3, it triggers a Lambda function to process and store the data in Amazon RDS (MySQL). A second Lambda function runs daily to send a **summary report via email using Amazon SES**.
@@ -44,5 +42,4 @@ Settings > Secrets and Variables > Actions > Repository Secrets
 
 AWS_ACCESS_KEY_ID
 
-AWS_SECRET_ACCESS_KEYi
->>>>>>> 1ede20b (intia commit)
+AWS_SECRET_ACCESS_KEY

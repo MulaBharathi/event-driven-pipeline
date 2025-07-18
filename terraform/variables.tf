@@ -6,7 +6,6 @@ variable "project_name" {
   default = "event-driven-pipeline"
 }
 
-
 variable "db_pass" {
   description = "The password for the RDS database admin user"
   type        = string
@@ -26,5 +25,4 @@ variable "private_subnet_ids" {
   description = "List of private subnet IDs for RDS"
   type        = list(string)
 }
-
 
