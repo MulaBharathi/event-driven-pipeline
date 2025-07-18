@@ -1,0 +1,38 @@
+name: Deploy Lambda
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'lambda/**'
+      - '.github/workflows/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Deploy Data Processor Lambda
+        run: |
+          zip function.zip lambda/data_processor.py
+          aws lambda update-function-code \
+            --function-name data-processor-fn \
+            --zip-file fileb://function.zip
+
+      - name: Deploy Report Generator Lambda
+        run: |
+          zip function2.zip lambda/report_generator.py
+          aws lambda update-function-code \
+            --function-name report-generator-fn \
+            --zip-file fileb://function2.zip
+
