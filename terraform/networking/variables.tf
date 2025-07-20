@@ -1,5 +1,5 @@
 variable "aws_region" {
-  description = "The AWS region for deployment"
+  description = "The AWS region to deploy resources in"
   type        = string
 }
 
@@ -9,22 +9,22 @@ variable "project_name" {
 }
 
 variable "vpc_id" {
-  description = "The VPC ID to use"
+  description = "The ID of the VPC"
   type        = string
 }
 
 variable "private_subnet_ids" {
-  description = "List of private subnet IDs"
+  description = "List of private subnet IDs for RDS"
   type        = list(string)
 }
 
 variable "db_user" {
-  description = "RDS username"
+  description = "Database username"
   type        = string
 }
 
 variable "db_pass" {
-  description = "RDS password"
+  description = "The password for the RDS database admin user"
   type        = string
   sensitive   = true
 }
@@ -35,7 +35,7 @@ variable "db_security_group_id" {
 }
 
 variable "domain_name" {
-  description = "Domain for SES"
+  description = "The domain name for SES verification"
   type        = string
 }
 
