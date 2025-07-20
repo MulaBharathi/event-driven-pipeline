@@ -7,4 +7,6 @@ private_subnet_ids  = [
   "subnet-08d40e42d6ed3b615",
   "subnet-07f8979f7251e9b7c"
 ]
-db_security_group_id = "sg-03b12980b64edf726"
+db_security_group_id = "sg-03b12980b64edf726
+vpc_id = "vpc-0b5485c8e7967a324"
+"
