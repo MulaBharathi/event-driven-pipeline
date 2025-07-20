@@ -12,7 +12,7 @@ resource "aws_db_instance" "main" {
   engine                  = "mysql"
   instance_class          = "db.t3.micro"
   allocated_storage       = 20
-  name                    = "eventdb"
+  db_name                 = "eventdb"
   username                = var.db_user
   password                = var.db_pass
   db_subnet_group_name    = aws_db_subnet_group.main.name

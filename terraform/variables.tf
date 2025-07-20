@@ -29,4 +29,8 @@ variable "db_security_group_id" {
   description = "The security group ID to associate with the RDS instance"
   type        = string
 }
+variable "vpc_id" {
+  description = "VPC ID"
+  type        = string
+}
 
