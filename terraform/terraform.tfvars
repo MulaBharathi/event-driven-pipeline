@@ -9,4 +9,5 @@ private_subnet_ids  = [
 ]
 db_security_group_id = "sg-03b12980b64edf726"
 vpc_id = "vpc-0b5485c8e7967a324"
+aws_region = "ap-south-1"
 
