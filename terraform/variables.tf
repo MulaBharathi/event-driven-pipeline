@@ -25,4 +25,8 @@ variable "private_subnet_ids" {
   description = "List of private subnet IDs for RDS"
   type        = list(string)
 }
+variable "db_security_group_id" {
+  description = "The security group ID to associate with the RDS instance"
+  type        = string
+}
 
