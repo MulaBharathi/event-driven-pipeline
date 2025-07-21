@@ -2,7 +2,7 @@ resource "aws_lambda_function" "processor" {
   function_name = "${var.project_name}-processor"
   runtime       = "python3.11"
   role          = aws_iam_role.lambda_exec_role.arn
-  handler       = "lambda_function.lambda_handler"
+  handler       = "data_processor.lambda_handler"
   filename      = "../lambda/data_processor.zip"
   source_code_hash = filebase64sha256("../lambda/data_processor.zip")
 
