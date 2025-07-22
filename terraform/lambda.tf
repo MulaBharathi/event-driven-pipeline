@@ -5,7 +5,7 @@ resource "aws_lambda_function" "processor" {
   handler       = "data_processor.lambda_handler"
 
   s3_bucket         = "event-driven-pipeline-data-bucket"
-  s3_key            = "lambdas/data_processor.zip"
+  s3_key            = "lambda/data_processor.zip"       # ✅ fixed this line
   source_code_hash  = filebase64sha256("../lambda/data_processor.zip")
 
   environment {
@@ -22,7 +22,7 @@ resource "aws_lambda_function" "report_generator" {
   handler       = "report_generator.lambda_handler"
 
   s3_bucket         = "event-driven-pipeline-data-bucket"
-  s3_key            = "lambdas/report_generator.zip"
+  s3_key            = "lambda/report_generator.zip"     # ✅ fixed this line
   source_code_hash  = filebase64sha256("../lambda/report_generator.zip")
 
   environment {
