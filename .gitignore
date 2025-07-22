@@ -1,4 +1,13 @@
-__pycache__/
-*.zip
+# Ignore Terraform state files
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+
+# Ignore Lambda build artifacts
 lambda/lambda_package/
-terraform/terraform.tfstate*
+lambda/*.zip
+__pycache__/
+
+# Python bytecode
+*.pyc
+
