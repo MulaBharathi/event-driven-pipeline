@@ -26,3 +26,10 @@ PyMySQL-*/
 pymysql/
 report_lambda_package/
 PyMySQL-*/
+
+# Ignore generated files
+*.zip
+*.tfstate*
+pymysql/
+report_lambda_package/
+PyMySQL-*/
