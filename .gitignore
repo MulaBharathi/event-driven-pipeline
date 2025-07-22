@@ -19,3 +19,10 @@ __pycache__/
 report_lambda_package/
 pymysql/
 PyMySQL-*/
+
+# Ignore generated files
+*.zip
+*.tfstate*
+pymysql/
+report_lambda_package/
+PyMySQL-*/
