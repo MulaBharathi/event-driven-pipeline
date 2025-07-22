@@ -11,3 +11,11 @@ __pycache__/
 # Python bytecode
 *.pyc
 
+
+# Ignore these build and state files
+*.zip
+*.tfstate*
+__pycache__/
+report_lambda_package/
+pymysql/
+PyMySQL-*/
