@@ -1,0 +1,13 @@
+[
+  {
+    "user_id": "123",
+    "action": "login",
+    "timestamp": "2025-07-22T17:30:00Z"
+  },
+  {
+    "user_id": "456",
+    "action": "logout",
+    "timestamp": "2025-07-22T17:45:00Z"
+  }
+]
+
