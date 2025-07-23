@@ -1,41 +1,8 @@
-# Unique S3 bucket for storing lambda code and data
-resource "aws_s3_bucket" "data_bucket" {
-  bucket = "bharathi-event-driven-pipeline-bucket-2025"  # Change this to a unique name!
-  acl    = "private"
-
-  tags = {
-    Name        = "${var.project_name}-bucket"
-    Environment = var.environment
-  }
-}
-
-# IAM Role for Lambda execution
-resource "aws_iam_role" "lambda_exec_role" {
-  name = "${var.project_name}-lambda-exec-role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [{
-      Action = "sts:AssumeRole"
-      Principal = {
-        Service = "lambda.amazonaws.com"
-      }
-      Effect = "Allow"
-      Sid    = ""
-    }]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
-  role       = aws_iam_role.lambda_exec_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-}
-
-# Lambda Function: processor
+# Lambda function: data processor
 resource "aws_lambda_function" "processor" {
   function_name = "${var.project_name}-processor"
   runtime       = "python3.11"
-  role          = aws_iam_role.lambda_exec_role.arn
+  role          = aws_iam_role.lambda_exec_role.arn   # reference IAM role from iam.tf
   handler       = "data_processor.lambda_handler"
 
   filename         = "${path.module}/../lambda/data_processor.zip"
@@ -51,11 +18,11 @@ resource "aws_lambda_function" "processor" {
   memory_size = 128
 }
 
-# Lambda Function: report_generator
+# Lambda function: report generator
 resource "aws_lambda_function" "report_generator" {
   function_name = "${var.project_name}-report-generator"
   runtime       = "python3.11"
-  role          = aws_iam_role.lambda_exec_role.arn
+  role          = aws_iam_role.lambda_exec_role.arn   # reference IAM role from iam.tf
   handler       = "report_generator.lambda_handler"
 
   filename         = "${path.module}/../lambda/report_generator.zip"
@@ -92,7 +59,7 @@ resource "aws_s3_bucket_notification" "notify_lambda" {
   depends_on = [aws_lambda_permission.allow_s3_invoke]
 }
 
-# CloudWatch Event Rule to trigger report_generator daily
+# CloudWatch Event Rule to trigger report_generator Lambda daily
 resource "aws_cloudwatch_event_rule" "daily_report" {
   name                = "${var.project_name}-daily-report"
   schedule_expression = "rate(1 day)"
