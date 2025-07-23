@@ -1,3 +1,8 @@
+# Reference your existing S3 bucket by name
+data "aws_s3_bucket" "data_bucket" {
+  bucket = "event-driven-pipeline-event-driven-pipeline-bucket"  # replace with your actual bucket name
+}
+
 resource "aws_lambda_function" "processor" {
   function_name = "${var.project_name}-processor"
   runtime       = "python3.11"
@@ -35,16 +40,17 @@ resource "aws_lambda_function" "report_generator" {
   timeout     = 10
   memory_size = 128
 }
+
 resource "aws_lambda_permission" "allow_s3_invoke" {
   statement_id  = "AllowS3Invoke"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.processor.function_name
   principal     = "s3.amazonaws.com"
-  source_arn    = aws_s3_bucket.data_bucket.arn  # replace with your S3 bucket resource name
+  source_arn    = data.aws_s3_bucket.data_bucket.arn
 }
 
 resource "aws_s3_bucket_notification" "notify_lambda" {
-  bucket = aws_s3_bucket.data_bucket.id  # replace with your S3 bucket resource name
+  bucket = data.aws_s3_bucket.data_bucket.id
 
   lambda_function {
     lambda_function_arn = aws_lambda_function.processor.arn
