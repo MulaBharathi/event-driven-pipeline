@@ -1,3 +1,13 @@
+# S3 Bucket Resource (needed for Lambda trigger)
+resource "aws_s3_bucket" "data_bucket" {
+  bucket = "${var.project_name}-bucket"
+
+  tags = {
+    Name = "${var.project_name}-bucket"
+  }
+}
+
+# Lambda function: Data Processor
 resource "aws_lambda_function" "processor" {
   function_name = "${var.project_name}-processor"
   runtime       = "python3.11"
@@ -17,6 +27,7 @@ resource "aws_lambda_function" "processor" {
   memory_size = 128
 }
 
+# Lambda function: Report Generator
 resource "aws_lambda_function" "report_generator" {
   function_name = "${var.project_name}-report-generator"
   runtime       = "python3.11"
