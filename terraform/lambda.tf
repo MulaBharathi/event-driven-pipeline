@@ -1,8 +1,3 @@
-# Reference your existing S3 bucket by name
-data "aws_s3_bucket" "data_bucket" {
-  bucket = "event-driven-pipeline-event-driven-pipeline-bucket"  # replace with your actual bucket name
-}
-
 resource "aws_lambda_function" "processor" {
   function_name = "${var.project_name}-processor"
   runtime       = "python3.11"
@@ -41,16 +36,18 @@ resource "aws_lambda_function" "report_generator" {
   memory_size = 128
 }
 
+# Allow S3 to invoke processor Lambda
 resource "aws_lambda_permission" "allow_s3_invoke" {
   statement_id  = "AllowS3Invoke"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.processor.function_name
   principal     = "s3.amazonaws.com"
-  source_arn    = data.aws_s3_bucket.data_bucket.arn
+  source_arn    = aws_s3_bucket.data_bucket.arn
 }
 
+# S3 bucket notification to trigger processor Lambda on new object creation
 resource "aws_s3_bucket_notification" "notify_lambda" {
-  bucket = data.aws_s3_bucket.data_bucket.id
+  bucket = aws_s3_bucket.data_bucket.id
 
   lambda_function {
     lambda_function_arn = aws_lambda_function.processor.arn
@@ -58,5 +55,25 @@ resource "aws_s3_bucket_notification" "notify_lambda" {
   }
 
   depends_on = [aws_lambda_permission.allow_s3_invoke]
+}
+
+# CloudWatch Event Rule to trigger report_generator daily
+resource "aws_cloudwatch_event_rule" "daily_report" {
+  name                = "${var.project_name}-daily-report"
+  schedule_expression = "rate(1 day)"
+}
+
+resource "aws_cloudwatch_event_target" "invoke_report_generator" {
+  rule      = aws_cloudwatch_event_rule.daily_report.name
+  target_id = "ReportGenerator"
+  arn       = aws_lambda_function.report_generator.arn
+}
+
+resource "aws_lambda_permission" "allow_cloudwatch_to_call_report_generator" {
+  statement_id  = "AllowExecutionFromCloudWatch"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_function.report_generator.function_name
+  principal     = "events.amazonaws.com"
+  source_arn    = aws_cloudwatch_event_rule.daily_report.arn
 }
 
