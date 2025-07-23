@@ -1,13 +1,37 @@
-# S3 Bucket Resource (needed for Lambda trigger)
+# Unique S3 bucket for storing lambda code and data
 resource "aws_s3_bucket" "data_bucket" {
-  bucket = "${var.project_name}-bucket"
+  bucket = "bharathi-event-driven-pipeline-bucket-2025"  # Change this to a unique name!
+  acl    = "private"
 
   tags = {
-    Name = "${var.project_name}-bucket"
+    Name        = "${var.project_name}-bucket"
+    Environment = var.environment
   }
 }
 
-# Lambda function: Data Processor
+# IAM Role for Lambda execution
+resource "aws_iam_role" "lambda_exec_role" {
+  name = "${var.project_name}-lambda-exec-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action = "sts:AssumeRole"
+      Principal = {
+        Service = "lambda.amazonaws.com"
+      }
+      Effect = "Allow"
+      Sid    = ""
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "lambda_basic_execution" {
+  role       = aws_iam_role.lambda_exec_role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+# Lambda Function: processor
 resource "aws_lambda_function" "processor" {
   function_name = "${var.project_name}-processor"
   runtime       = "python3.11"
@@ -27,7 +51,7 @@ resource "aws_lambda_function" "processor" {
   memory_size = 128
 }
 
-# Lambda function: Report Generator
+# Lambda Function: report_generator
 resource "aws_lambda_function" "report_generator" {
   function_name = "${var.project_name}-report-generator"
   runtime       = "python3.11"
