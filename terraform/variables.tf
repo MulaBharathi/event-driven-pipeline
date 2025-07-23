@@ -38,4 +38,21 @@ variable "domain_name" {
   description = "Domain for SES"
   type        = string
 }
+variable "environment" {
+  description = "The environment name (e.g. dev, prod)"
+  type        = string
+  default     = "dev"
+}
+# Lambda S3 keys
+variable "lambda_report_key" {
+  description = "S3 object key for report generator Lambda"
+  type        = string
+  default     = "lambda/report_generator.zip"
+}
+
+variable "lambda_processor_key" {
+  description = "S3 object key for data processor Lambda"
+  type        = string
+  default     = "lambda/data_processor.zip"
+}
 

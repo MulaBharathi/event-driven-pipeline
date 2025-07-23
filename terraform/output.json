@@ -1,0 +1,1 @@
+{"errorMessage": "'DB_HOST'", "errorType": "KeyError", "requestId": "e98b8ebc-0663-44af-95f9-c667cb0995c0", "stackTrace": ["  File \"/var/task/report_generator.py\", line 9, in lambda_handler\n    host=os.environ['DB_HOST'],\n", "  File \"<frozen os>\", line 679, in __getitem__\n"]}

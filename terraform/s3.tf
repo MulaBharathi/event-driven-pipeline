@@ -1,25 +1,29 @@
-resource "aws_s3_bucket" "data_bucket" {
-  bucket        = "${var.project_name}-data-bucket"
+# Create the S3 bucket
+resource "aws_s3_bucket" "pipeline_bucket" {
+  bucket = "${var.project_name}-event-driven-pipeline-bucket"
   force_destroy = true
-}
 
-resource "aws_lambda_permission" "allow_s3_invocation" {
-  statement_id  = "AllowExecutionFromS3"
-  action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_function.processor.function_name
-  principal     = "s3.amazonaws.com"
-  source_arn    = aws_s3_bucket.data_bucket.arn
-}
-
-resource "aws_s3_bucket_notification" "lambda_trigger" {
-  bucket = aws_s3_bucket.data_bucket.id
-
-  lambda_function {
-    lambda_function_arn = aws_lambda_function.processor.arn
-    events              = ["s3:ObjectCreated:*"]
-    filter_suffix       = ".json"
+  tags = {
+    Name        = "${var.project_name}-pipeline-bucket"
+    Environment = var.environment
   }
+}
 
-  depends_on = [aws_lambda_permission.allow_s3_invocation]
+# Upload report_generator Lambda ZIP
+resource "aws_s3_object" "report_generator_zip" {
+  bucket       = aws_s3_bucket.pipeline_bucket.id
+  key          = "lambda/report_generator.zip"  # S3 path
+  source       = "${path.module}/../lambda/report_generator.zip"  # local file path
+  etag         = filemd5("${path.module}/../lambda/report_generator.zip")
+  content_type = "application/zip"
+}
+
+# Upload data_processor Lambda ZIP
+resource "aws_s3_object" "data_processor_zip" {
+  bucket       = aws_s3_bucket.pipeline_bucket.id
+  key          = "lambda/data_processor.zip"
+  source       = "${path.module}/../lambda/data_processor.zip"
+  etag         = filemd5("${path.module}/../lambda/data_processor.zip")
+  content_type = "application/zip"
 }
 
