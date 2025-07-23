@@ -31,17 +31,4 @@ resource "aws_lambda_function" "report_generator" {
     }
   }
 }
-vpc_config {
-    subnet_ids = [
-      aws_subnet.private_1.id,
-      aws_subnet.private_2.id,
-      aws_subnet.private_3.id
-    ]
-    security_group_ids = [aws_security_group.lambda_sg.id]
-  }
-
-  tags = {
-    Name = "${var.project_name}-report-generator"
-  }
-}
 
